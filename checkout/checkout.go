@@ -72,9 +72,10 @@ func finish(w http.ResponseWriter, r *http.Request) {
 	order.ProductId = r.FormValue("product_id")
 
 	data, _ := json.Marshal(order)
-	fmt.Println(string(data))
 
-	queue.Connect()
+	connection := queue.Connect()
+	queue.Publisher(data, "checkout_ex", "", connection)
+
 	w.Write([]byte("Em processamento"))
 }
 
